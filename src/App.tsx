@@ -8,6 +8,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
+import Operations from "./pages/Operations";
 import NotFound from "./pages/NotFound";
 
 // Páginas temporárias para as rotas não implementadas
@@ -31,7 +32,7 @@ const App = () => (
             <Route index element={<Index />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="operations" element={<PlaceholderPage title="Operações de Campo" />} />
+            <Route path="operations" element={<Operations />} />
             <Route path="quality" element={<PlaceholderPage title="Gestão de Qualidade" />} />
             <Route path="customers" element={<PlaceholderPage title="Portal do Cliente" />} />
             <Route path="settings" element={<PlaceholderPage title="Configurações" />} />

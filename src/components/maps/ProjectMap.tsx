@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Loader2, Layers, Map as MapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import MapBox from './MapBox';
 
 // Tipos para os projetos exibidos no mapa
 export interface MapProject {
@@ -111,22 +112,6 @@ const ProjectMap: React.FC<{
   const [filteredProjects, setFilteredProjects] = useState<MapProject[]>(sampleProjects);
   const [mapStyle, setMapStyle] = useState<'map' | 'satellite'>('map');
 
-  // Função para obter a cor do marcador baseado no status do projeto
-  const getMarkerColor = (status: string): string => {
-    switch (status) {
-      case 'on-track':
-        return '#22C55E'; // verde
-      case 'at-risk':
-        return '#F59E0B'; // amarelo
-      case 'delayed':
-        return '#EF4444'; // vermelho
-      case 'completed':
-        return '#3B82F6'; // azul
-      default:
-        return '#64748B'; // cinza
-    }
-  };
-
   // Tratar o filtro de projetos
   const handleFilterProjects = (filters: {
     country?: string;
@@ -152,41 +137,6 @@ const ProjectMap: React.FC<{
   const toggleMapStyle = () => {
     const newStyle = mapStyle === 'map' ? 'satellite' : 'map';
     setMapStyle(newStyle);
-  };
-
-  // Renderizar a visualização do mapa alternativa devido a problemas com o token
-  const renderMapPlaceholder = () => {
-    return (
-      <div className="bg-muted/30 relative" style={{ height, width: '100%' }}>
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-          <MapIcon className="h-16 w-16 text-muted-foreground/50 mb-4" />
-          <h3 className="text-xl font-medium mb-2">Visualização de Mapa</h3>
-          <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
-            Esta é uma visualização simulada do mapa. Em um ambiente de produção, 
-            isso seria substituído por um mapa interativo com os marcadores de projetos.
-          </p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 w-full max-w-3xl mt-4">
-            {filteredProjects.map(project => (
-              <div 
-                key={project.id}
-                className="border rounded-md bg-card p-3 cursor-pointer hover:bg-accent/50 transition-colors"
-                onClick={() => setSelectedProject(project)}
-              >
-                <div className="flex items-center mb-2">
-                  <span 
-                    className="h-3 w-3 rounded-full mr-2" 
-                    style={{ backgroundColor: getMarkerColor(project.status) }}
-                  ></span>
-                  <span className="text-sm font-medium truncate">{project.name}</span>
-                </div>
-                <p className="text-xs text-muted-foreground">{project.location}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -223,8 +173,13 @@ const ProjectMap: React.FC<{
         </div>
       )}
 
-      {/* Renderizar placeholder em vez do mapa real */}
-      {renderMapPlaceholder()}
+      <MapBox 
+        projects={filteredProjects} 
+        height={height} 
+        onSelectProject={setSelectedProject}
+        mapStyle={mapStyle}
+        onToggleMapStyle={toggleMapStyle}
+      />
 
       {selectedProject && (
         <div className="p-4 border-t bg-muted/30">
