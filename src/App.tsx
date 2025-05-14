@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,7 +8,10 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Operations from "./pages/Operations";
+import Clients from "./pages/Clients";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Quality from "./pages/Quality";
 
 // Páginas temporárias para as rotas não implementadas
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -33,9 +35,9 @@ const App = () => (
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
             <Route path="operations" element={<Operations />} />
-            <Route path="quality" element={<PlaceholderPage title="Gestão de Qualidade" />} />
-            <Route path="customers" element={<PlaceholderPage title="Portal do Cliente" />} />
-            <Route path="settings" element={<PlaceholderPage title="Configurações" />} />
+            <Route path="quality" element={<Quality />} />
+            <Route path="clients" element={<Clients />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

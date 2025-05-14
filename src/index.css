@@ -1,77 +1,62 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Cores originais */
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
-
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-
-    --primary: 201 100% 38%;
+    --primary: 201 100% 38%;  /* Manter esta cor OTIS azul */
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
-
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-
     --accent: 210 40% 96%;
     --accent-foreground: 222 47% 11%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 201 100% 38%;
-
     --radius: 0.5rem;
 
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 201 100% 38%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 27% 23%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 213 27% 23%;
-    --sidebar-ring: 201 100% 38%;
+    /* Cores OTIS atualizadas para a sidebar */
+    --sidebar: 210 100% 30%;  /* OTIS blue color (#00529b) */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-accent: 210 80% 40%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 100% 25%;
+
+    /* Cores OTIS corporativas para uso geral */
+    --otis-blue: 210 100% 30%;      /* OTIS primary blue */
+    --otis-orange: 25 90% 52%;      /* OTIS secondary orange */
+    --otis-gray: 220 10% 90%;       /* OTIS light gray for backgrounds */
   }
 
   .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-
     --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 201 100% 38%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 217 33% 18%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217 33% 18%;
     --muted-foreground: 215 20% 65%;
-
     --accent: 217 33% 18%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 201 80% 50%;
@@ -82,70 +67,121 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', sans-serif;
   }
 
+  /* Cards e estatísticas (já existentes) */
   .card-dashboard {
     @apply bg-card p-6 rounded-lg shadow-md border border-border;
   }
-
   .stats-card {
     @apply bg-card p-4 rounded-lg shadow-sm border border-border flex flex-col;
   }
-
   .stats-value {
     @apply text-2xl font-semibold;
   }
-
   .stats-label {
     @apply text-sm text-muted-foreground;
   }
-
   .trend-up {
     @apply text-green-500 flex items-center;
   }
-
   .trend-down {
     @apply text-red-500 flex items-center;
   }
-
   .trend-neutral {
     @apply text-yellow-500 flex items-center;
   }
 
+  /* Tabelas de dados (já existentes) */
   .data-table {
     @apply w-full bg-card rounded-lg shadow-sm overflow-hidden;
   }
-
   .data-table th {
     @apply bg-muted p-3 text-sm font-medium text-muted-foreground text-left;
   }
-
   .data-table td {
     @apply p-3 border-t border-border;
   }
 
-  /* Status indicators */
+  /* Status indicators (já existentes) */
   .status-badge {
     @apply px-2.5 py-0.5 rounded-full text-xs font-medium inline-flex items-center;
   }
-
   .status-on-track {
     @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
   }
-
   .status-at-risk {
     @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400;
   }
-
   .status-delayed {
     @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
   }
-
   .status-completed {
     @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
   }
+}
+
+/* Animações adicionadas para uso no AppLayout */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+/* Estilos específicos OTIS para componentes corporativos */
+.otis-header {
+  @apply bg-white border-b border-gray-200 shadow-sm;
+}
+
+.otis-footer {
+  @apply py-2 px-6 bg-white border-t text-center text-xs text-gray-500;
+}
+
+.otis-sidebar {
+  @apply bg-[#00529b] text-white border-r border-[#003a6e];
+}
+
+.otis-button-primary {
+  @apply bg-[#00529b] hover:bg-[#003a6e] text-white;
+}
+
+.otis-button-secondary {
+  @apply bg-[#f47216] hover:bg-[#d25f10] text-white;
+}
+
+/* Loader OTIS corporativo */
+.otis-loader {
+  @apply h-10 w-10 relative;
+}
+
+.otis-loader::before,
+.otis-loader::after {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  animation: otis-spin 1.5s linear infinite;
+}
+
+.otis-loader::before {
+  @apply border-2 border-t-[#00529b] border-r-transparent border-b-transparent border-l-transparent;
+}
+
+.otis-loader::after {
+  @apply border-2 border-t-transparent border-r-transparent border-b-transparent border-l-[#00529b];
+  animation-delay: 0.15s;
+}
+
+@keyframes otis-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

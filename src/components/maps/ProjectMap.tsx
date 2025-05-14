@@ -1,238 +1,181 @@
+// ProjectMap.tsx
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import 'leaflet/dist/leaflet.css';
 
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Loader2, Layers, Map as MapIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import MapBox from './MapBox';
+// Correção para os ícones do Leaflet
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Tipos para os projetos exibidos no mapa
-export interface MapProject {
-  id: string;
-  name: string;
-  client: string;
-  location: string;
-  country: string;
-  status: 'on-track' | 'at-risk' | 'delayed' | 'completed';
-  progress: number;
-  coordinates: [number, number]; // [longitude, latitude]
-}
-
-// Projetos de exemplo com coordenadas para demonstração
-const sampleProjects: MapProject[] = [
+// Instalações mockadas com coordenadas
+const mockInstallations = [
   {
-    id: "BR-2023-001",
+    id: "INST-BR-001",
     name: "Torre Corporativa São Paulo",
-    client: "Grupo Empresarial Brasileiro",
     location: "São Paulo, Brasil",
-    country: "Brasil",
-    status: "on-track",
-    progress: 75,
-    coordinates: [-46.6333, -23.5505]
-  },
-  {
-    id: "MX-2023-042",
-    name: "Plaza Central Ciudad de México",
-    client: "Inversiones Mexicanas S.A.",
-    location: "Cidade do México, México",
-    country: "México",
-    status: "at-risk",
-    progress: 45,
-    coordinates: [-99.1332, 19.4326]
-  },
-  {
-    id: "AR-2023-018",
-    name: "Torre Libertador Buenos Aires",
-    client: "Consorcio Argentino",
-    location: "Buenos Aires, Argentina",
-    country: "Argentina",
-    status: "delayed",
-    progress: 30,
-    coordinates: [-58.3816, -34.6037]
-  },
-  {
-    id: "CL-2023-007",
-    name: "Centro Costanera Santiago",
-    client: "Desarrollos Chilenos Ltda.",
-    location: "Santiago, Chile",
-    country: "Chile",
-    status: "completed",
-    progress: 100,
-    coordinates: [-70.6693, -33.4489]
-  },
-  {
-    id: "CO-2023-023",
-    name: "Edificio Central Bogotá",
-    client: "Constructora Colombiana",
-    location: "Bogotá, Colômbia",
-    country: "Colômbia",
-    status: "on-track",
-    progress: 60,
-    coordinates: [-74.0721, 4.7110]
-  },
-  {
-    id: "PE-2023-012",
-    name: "Torre Miraflores Lima",
-    client: "Inversiones Peruanas",
-    location: "Lima, Peru",
-    country: "Peru",
-    status: "on-track",
-    progress: 50,
-    coordinates: [-77.0428, -12.0464]
-  },
-  {
-    id: "BR-2023-002",
-    name: "Centro Comercial Rio",
-    client: "Rio Investimentos",
-    location: "Rio de Janeiro, Brasil",
-    country: "Brasil",
-    status: "on-track",
+    status: "em-andamento",
     progress: 65,
-    coordinates: [-43.1729, -22.9068]
+    equipmentType: "Elevador de Alta Velocidade",
+    coordinates: [-23.5505, -46.6333] // Leaflet usa [lat, lng]
   },
   {
-    id: "MX-2023-043",
-    name: "Torre Ejecutiva Monterrey",
-    client: "Grupo Monterrey",
-    location: "Monterrey, México",
-    country: "México",
-    status: "delayed",
-    progress: 35,
-    coordinates: [-100.3161, 25.6866]
+    id: "INST-MX-042",
+    name: "Plaza Central Ciudad de México",
+    location: "Cidade do México, México",
+    status: "em-andamento",
+    progress: 45,
+    equipmentType: "Elevador Panorâmico",
+    coordinates: [19.4326, -99.1332]
+  },
+  {
+    id: "INST-CL-007",
+    name: "Centro Costanera Santiago",
+    location: "Santiago, Chile",
+    status: "concluido",
+    progress: 100,
+    equipmentType: "Escada Rolante",
+    coordinates: [-33.4489, -70.6693]
   }
 ];
 
-// Componente principal do mapa
-const ProjectMap: React.FC<{
-  height?: string;
-  className?: string;
-  showFilters?: boolean;
-}> = ({ height = "500px", className, showFilters = true }) => {
-  const [selectedProject, setSelectedProject] = useState<MapProject | null>(null);
-  const [filteredProjects, setFilteredProjects] = useState<MapProject[]>(sampleProjects);
-  const [mapStyle, setMapStyle] = useState<'map' | 'satellite'>('map');
+// Centro do mapa - América Latina
+const defaultCenter = [-15, -60];
+const defaultZoom = 3;
 
-  // Tratar o filtro de projetos
-  const handleFilterProjects = (filters: {
-    country?: string;
-    status?: string;
-    period?: string;
-  }) => {
-    let filtered = [...sampleProjects];
-    
-    if (filters.country && filters.country !== 'all') {
-      filtered = filtered.filter(project => 
-        project.country === filters.country);
-    }
-    
-    if (filters.status && filters.status !== 'all') {
-      filtered = filtered.filter(project => 
-        project.status === filters.status);
-    }
-    
-    setFilteredProjects(filtered);
-  };
+const ProjectMap = ({ height = "500px", showFilters = false }) => {
+  const [activeFilter, setActiveFilter] = useState("todos");
+  const [map, setMap] = useState(null);
 
-  // Alternar entre mapa normal e satélite
-  const toggleMapStyle = () => {
-    const newStyle = mapStyle === 'map' ? 'satellite' : 'map';
-    setMapStyle(newStyle);
+  // Corrigir o problema do ícone do Leaflet
+  useEffect(() => {
+    // Este código corrige o problema dos ícones do Leaflet
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+      iconUrl,
+      iconShadow,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+  }, []);
+
+  // Filtrar instalações com base no filtro ativo
+  const filteredInstallations = activeFilter === "todos"
+    ? mockInstallations
+    : mockInstallations.filter(installation => installation.status === activeFilter);
+
+  // Função para criar divIcon personalizado
+  const createCustomMarker = (status) => {
+    const color = status === 'em-andamento'
+      ? '#3b82f6'  // azul
+      : status === 'concluido'
+        ? '#22c55e'  // verde
+        : '#eab308'; // amarelo
+
+    return L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div style="
+        background-color: ${color};
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      "></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10]
+    });
   };
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <div className="p-4 border-b flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Mapa de Projetos</h2>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={toggleMapStyle}
-          >
-            {mapStyle === 'map' ? (
-              <>
-                <Layers className="mr-2 h-4 w-4" />
-                <span>Satélite</span>
-              </>
-            ) : (
-              <>
-                <MapIcon className="mr-2 h-4 w-4" />
-                <span>Mapa</span>
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {showFilters && (
-        <div className="p-4 bg-muted/30">
-          <p className="text-sm font-medium">Filtros</p>
-          <p className="text-xs text-muted-foreground">
-            Os filtros serão implementados em uma fase posterior.
-          </p>
-        </div>
-      )}
-
-      <MapBox 
-        projects={filteredProjects} 
-        height={height} 
-        onSelectProject={setSelectedProject}
-        mapStyle={mapStyle}
-        onToggleMapStyle={toggleMapStyle}
-      />
-
-      {selectedProject && (
-        <div className="p-4 border-t bg-muted/30">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-medium">{selectedProject.name}</h3>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setSelectedProject(null)}
-            >
-              Fechar
-            </Button>
-          </div>
-          <div className="space-y-2 text-sm">
-            <p><span className="font-medium">ID:</span> {selectedProject.id}</p>
-            <p><span className="font-medium">Cliente:</span> {selectedProject.client}</p>
-            <p><span className="font-medium">Localização:</span> {selectedProject.location}</p>
-            <p>
-              <span className="font-medium">Status:</span> 
-              <span 
-                className={`ml-1 inline-block px-2 py-1 rounded-full text-xs ${
-                  selectedProject.status === 'on-track' ? 'bg-green-100 text-green-800' :
-                  selectedProject.status === 'at-risk' ? 'bg-yellow-100 text-yellow-800' :
-                  selectedProject.status === 'delayed' ? 'bg-red-100 text-red-800' :
-                  'bg-blue-100 text-blue-800'
-                }`}
+    <Card className="w-full">
+      <CardHeader className={showFilters ? "pb-2" : "pb-0"}>
+        {showFilters && (
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+            <CardTitle>Mapa de Projetos</CardTitle>
+            <div className="flex space-x-2">
+              <Badge
+                variant={activeFilter === "todos" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setActiveFilter("todos")}
               >
-                {selectedProject.status === 'on-track' ? 'No Prazo' :
-                  selectedProject.status === 'at-risk' ? 'Em Risco' :
-                  selectedProject.status === 'delayed' ? 'Atrasado' :
-                  'Concluído'}
-              </span>
-            </p>
-            <div>
-              <p className="font-medium mb-1">Progresso:</p>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div
-                  className={`h-full rounded-full ${
-                    selectedProject.status === 'on-track' ? 'bg-green-500' :
-                    selectedProject.status === 'at-risk' ? 'bg-yellow-500' :
-                    selectedProject.status === 'delayed' ? 'bg-red-500' :
-                    'bg-blue-500'
-                  }`}
-                  style={{ width: `${selectedProject.progress}%` }}
-                />
-              </div>
-              <div className="text-xs text-right mt-1">
-                {selectedProject.progress}%
-              </div>
+                Todos
+              </Badge>
+              <Badge
+                variant={activeFilter === "em-andamento" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setActiveFilter("em-andamento")}
+              >
+                Em Andamento
+              </Badge>
+              <Badge
+                variant={activeFilter === "concluido" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setActiveFilter("concluido")}
+              >
+                Concluídos
+              </Badge>
             </div>
           </div>
+        )}
+      </CardHeader>
+      <CardContent className="p-0">
+        <div style={{ height }}>
+          <MapContainer
+            center={defaultCenter}
+            zoom={defaultZoom}
+            style={{ height: '100%', width: '100%', borderRadius: '0 0 8px 8px' }}
+            whenCreated={setMap}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            {filteredInstallations.map(installation => (
+              <Marker
+                key={installation.id}
+                position={installation.coordinates}
+                icon={createCustomMarker(installation.status)}
+              >
+                <Popup>
+                  <div className="p-1">
+                    <h3 className="font-medium text-sm">{installation.name}</h3>
+                    <p className="text-xs text-muted-foreground">{installation.location}</p>
+                    <div className="flex items-center mt-1">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        installation.status === 'em-andamento' ? 'bg-blue-100 text-blue-800' :
+                        installation.status === 'concluido' ? 'bg-green-100 text-green-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {installation.status === 'em-andamento' ? 'Em Andamento' :
+                        installation.status === 'concluido' ? 'Concluído' : 'Agendado'}
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-xs mb-1">Progresso: {installation.progress}%</div>
+                      <div className="w-full bg-gray-200 rounded-full h-1">
+                        <div
+                          className={`h-full rounded-full ${
+                            installation.status === 'concluido' ? 'bg-green-500' : 'bg-blue-500'
+                          }`}
+                          style={{ width: `${installation.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
         </div>
-      )}
+      </CardContent>
     </Card>
   );
 };
