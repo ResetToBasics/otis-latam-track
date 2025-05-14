@@ -1,10 +1,8 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Loader2, Layers, Map as MapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProjectMapPopup } from './ProjectMapPopup';
-import { MapFilters } from './MapFilters';
 import { cn } from '@/lib/utils';
 
 // Tipos para os projetos exibidos no mapa
@@ -217,17 +215,68 @@ const ProjectMap: React.FC<{
       </div>
 
       {showFilters && (
-        <MapFilters onFilter={handleFilterProjects} />
+        <div className="p-4 bg-muted/30">
+          <p className="text-sm font-medium">Filtros</p>
+          <p className="text-xs text-muted-foreground">
+            Os filtros serão implementados em uma fase posterior.
+          </p>
+        </div>
       )}
 
       {/* Renderizar placeholder em vez do mapa real */}
       {renderMapPlaceholder()}
 
       {selectedProject && (
-        <ProjectMapPopup
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-        />
+        <div className="p-4 border-t bg-muted/30">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-medium">{selectedProject.name}</h3>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setSelectedProject(null)}
+            >
+              Fechar
+            </Button>
+          </div>
+          <div className="space-y-2 text-sm">
+            <p><span className="font-medium">ID:</span> {selectedProject.id}</p>
+            <p><span className="font-medium">Cliente:</span> {selectedProject.client}</p>
+            <p><span className="font-medium">Localização:</span> {selectedProject.location}</p>
+            <p>
+              <span className="font-medium">Status:</span> 
+              <span 
+                className={`ml-1 inline-block px-2 py-1 rounded-full text-xs ${
+                  selectedProject.status === 'on-track' ? 'bg-green-100 text-green-800' :
+                  selectedProject.status === 'at-risk' ? 'bg-yellow-100 text-yellow-800' :
+                  selectedProject.status === 'delayed' ? 'bg-red-100 text-red-800' :
+                  'bg-blue-100 text-blue-800'
+                }`}
+              >
+                {selectedProject.status === 'on-track' ? 'No Prazo' :
+                  selectedProject.status === 'at-risk' ? 'Em Risco' :
+                  selectedProject.status === 'delayed' ? 'Atrasado' :
+                  'Concluído'}
+              </span>
+            </p>
+            <div>
+              <p className="font-medium mb-1">Progresso:</p>
+              <div className="w-full bg-muted rounded-full h-2">
+                <div
+                  className={`h-full rounded-full ${
+                    selectedProject.status === 'on-track' ? 'bg-green-500' :
+                    selectedProject.status === 'at-risk' ? 'bg-yellow-500' :
+                    selectedProject.status === 'delayed' ? 'bg-red-500' :
+                    'bg-blue-500'
+                  }`}
+                  style={{ width: `${selectedProject.progress}%` }}
+                />
+              </div>
+              <div className="text-xs text-right mt-1">
+                {selectedProject.progress}%
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </Card>
   );
