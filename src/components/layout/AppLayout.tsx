@@ -4,10 +4,14 @@ import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
+import { useOffline } from '@/contexts/OfflineContext'; // Importar o hook de contexto offline
+import { Badge } from '@/components/ui/badge';
+import { WifiOff, Upload } from 'lucide-react';
 
 const AppLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+  const { isOnline, pendingActions } = useOffline(); // Usar o hook para obter estado offline
 
   // Simula carregamento inicial e também ao trocar de rota
   useEffect(() => {
@@ -24,6 +28,40 @@ const AppLayout = () => {
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Topbar />
+
+          {/* Indicador de modo offline */}
+          {!isOnline && (
+            <div className="bg-yellow-50 border-b border-yellow-200 py-2 px-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <WifiOff className="h-4 w-4 text-yellow-700 mr-2" />
+                <span className="text-sm text-yellow-800 font-medium">
+                  Modo Offline - Os dados serão sincronizados quando a conexão for restaurada
+                </span>
+              </div>
+              <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+                Offline
+              </Badge>
+            </div>
+          )}
+
+          {/* Indicador de itens pendentes para sincronização */}
+          {isOnline && pendingActions > 0 && (
+            <div className="bg-blue-50 border-b border-blue-200 py-2 px-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <Upload className="h-4 w-4 text-blue-700 mr-2" />
+                <span className="text-sm text-blue-800 font-medium">
+                  Sincronizando dados ({pendingActions} {pendingActions === 1 ? 'item pendente' : 'itens pendentes'})
+                </span>
+              </div>
+              <button
+                className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-medium rounded transition-colors"
+                onClick={() => window.location.href = '/offline-operations'}
+              >
+                Ver detalhes
+              </button>
+            </div>
+          )}
+
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
             {isLoading ? (
               <div className="w-full h-full flex items-center justify-center">

@@ -1,0 +1,121 @@
+// src/i18n/locales/pt/translation.json
+{
+  "common": {
+    "search": "Buscar",
+    "projects": "Projetos",
+    "clients": "Clientes",
+    "dashboard": "Dashboard",
+    "operations": "Operações",
+    "quality": "Qualidade",
+    "feedback": "Feedback",
+    "settings": "Configurações",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "details": "Detalhes",
+    "add": "Adicionar",
+    "filter": "Filtrar",
+    "moreFilters": "Mais Filtros"
+  },
+  "navigation": {
+    "dashboard": "Dashboard Executivo",
+    "projects": "Projetos",
+    "clients": "Clientes",
+    "operations": "Operações de Campo",
+    "quality": "Gestão da Qualidade",
+    "feedback": "Gestão de Feedback",
+    "settings": "Configurações"
+  },
+  "dashboard": {
+    "overview": "Visão geral de KPIs e métricas de desempenho da OTIS LATAM",
+    "ongoingProjects": "Projetos em Andamento",
+    "onTimeDelivery": "Taxa de Entrega no Prazo",
+    "qualityIndex": "Índice de Qualidade",
+    "customerSatisfaction": "Satisfação do Cliente"
+  },
+  "projects": {
+    "title": "Projetos",
+    "description": "Gerencie todos os projetos de instalação de elevadores OTIS",
+    "searchProjects": "Buscar projetos...",
+    "newProject": "Novo Projeto",
+    "projectsList": "Lista de Projetos",
+    "status": {
+      "onTrack": "No Prazo",
+      "atRisk": "Em Risco",
+      "delayed": "Atrasado",
+      "completed": "Concluído"
+    }
+  },
+  "clients": {
+    "title": "Clientes",
+    "description": "Gerenciamento de clientes e comunicações da OTIS LATAM",
+    "searchClients": "Buscar clientes...",
+    "newClient": "Novo Cliente",
+    "clientsList": "Lista de Clientes",
+    "clientTypes": {
+      "corporate": "Corporativo",
+      "developer": "Incorporadora",
+      "construction": "Construtora"
+    }
+  },
+  "operations": {
+    "title": "Operações de Campo",
+    "description": "Gerenciamento de instalações e equipes de campo da OTIS LATAM",
+    "map": "Mapa de Instalações",
+    "schedule": "Agendamento",
+    "teams": "Equipes",
+    "installationDetails": "Detalhes da Instalação",
+    "status": {
+      "inProgress": "Em Andamento",
+      "completed": "Concluído",
+      "planned": "Planejado"
+    }
+  },
+  "quality": {
+    "title": "Gestão da Qualidade",
+    "description": "Controle de qualidade e tratamento de não conformidades da OTIS LATAM",
+    "nonConformities": "Não Conformidades",
+    "inspections": "Inspeções",
+    "checklists": "Checklists",
+    "metrics": "Métricas",
+    "newNonConformity": "Nova Não Conformidade",
+    "severity": {
+      "critical": "Crítica",
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
+    }
+  },
+  "feedback": {
+    "title": "Gestão de Feedback",
+    "description": "Gerencie pesquisas de satisfação e feedbacks de clientes da OTIS LATAM",
+    "dashboard": "Dashboard",
+    "feedbacks": "Feedbacks",
+    "surveys": "Pesquisas",
+    "newSurvey": "Nova Pesquisa",
+    "viewAllFeedbacks": "Ver Todos os Feedbacks"
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Gerencie configurações do sistema e preferências de usuário",
+    "personalProfile": "Perfil Pessoal",
+    "notifications": "Notificações",
+    "language": "Idioma e Região",
+    "users": "Usuários e Acessos",
+    "company": "Dados da Empresa",
+    "security": "Segurança",
+    "logs": "Logs e Atividades",
+    "system": "Sistema e Manutenção"
+  },
+  "topbar": {
+    "searchPlaceholder": "Buscar projetos, clientes, instalações...",
+    "selectLanguage": "Selecione o Idioma",
+    "notifications": "Notificações",
+    "newNotifications": "novas",
+    "viewAllNotifications": "Ver todas as notificações",
+    "myProfile": "Meu Perfil",
+    "preferences": "Preferências",
+    "logout": "Sair"
+  }
+}

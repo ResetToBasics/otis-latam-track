@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, CheckSquare, ClipboardList, Clock, MapPin, Upload, User, Calendar as CalendarIcon } from 'lucide-react';
 import ProjectMap from "@/components/maps/ProjectMap";
+import SchedulingCalendar from './SchedulingCalendar';
+import TeamManagement from './TeamManagement'; // ou ajuste o caminho conforme sua estrutura de pastas
+
 
 // Mock data para instalações
 const installations = [
@@ -252,45 +255,11 @@ const Operations = () => {
         </TabsContent>
         
         <TabsContent value="schedule" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Agendamento de Instalações</CardTitle>
-              <CardDescription>
-                Planeje e agende novas instalações e manutenções
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center items-center min-h-[400px]">
-              <div className="text-center">
-                <CalendarIcon className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">Funcionalidade de Calendário</h3>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  O sistema de agendamento com calendário será implementado na próxima fase 
-                  para coordenação com clientes e equipes de campo.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <SchedulingCalendar />
         </TabsContent>
         
         <TabsContent value="teams" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gestão de Equipes de Campo</CardTitle>
-              <CardDescription>
-                Gerencie equipes, atribuições e desempenho
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center items-center min-h-[400px]">
-              <div className="text-center">
-                <User className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">Gestão de Equipes</h3>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  A funcionalidade de gestão de equipes será implementada na próxima fase, 
-                  incluindo rastreamento de produtividade e atribuição de tarefas.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <TeamManagement />
         </TabsContent>
         
         <TabsContent value="details" className="mt-0">

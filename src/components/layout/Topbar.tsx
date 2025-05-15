@@ -1,4 +1,8 @@
+// src/components/Topbar.tsx
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+// Em src/components/layout/Topbar.tsx
+import { useLanguage } from '../../contexts/LanguageContext'; // Nota os dois pontos extras (../../)
 import {
   Bell,
   Search,
@@ -21,12 +25,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-
-const languages = [
-  { code: 'pt', name: 'Português', flag: '🇧🇷' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'en', name: 'English', flag: '🇺🇸' }
-];
 
 const notifications = [
   {
@@ -53,7 +51,8 @@ const notifications = [
 ];
 
 const Topbar = () => {
-  const [currentLang, setCurrentLang] = useState('pt');
+  const { t } = useTranslation();
+  const { currentLanguage, changeLanguage, languages } = useLanguage();
 
   return (
     <header className="h-16 bg-white flex items-center justify-between px-6 border-b shadow-sm">
@@ -62,7 +61,7 @@ const Topbar = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <Input
             type="search"
-            placeholder="Buscar projetos, clientes, instalações..."
+            placeholder={t('topbar.searchPlaceholder')}
             className="pl-10 w-full bg-gray-50 border-gray-200 h-10 rounded-lg"
           />
         </div>
@@ -74,20 +73,20 @@ const Topbar = () => {
             <Button variant="ghost" size="sm" className="text-gray-600 hover:bg-gray-100 rounded-lg h-10">
               <Globe className="h-5 w-5 mr-1.5" />
               <span className="text-sm font-medium hidden md:block">{
-                languages.find(l => l.code === currentLang)?.flag
+                languages.find(l => l.code === currentLanguage)?.flag
               } {
-                languages.find(l => l.code === currentLang)?.name
+                languages.find(l => l.code === currentLanguage)?.name
               }</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuLabel>Selecione o Idioma</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('topbar.selectLanguage')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {languages.map((lang) => (
               <DropdownMenuItem
                 key={lang.code}
-                className={`${currentLang === lang.code ? "bg-blue-50 text-blue-600" : ""} cursor-pointer`}
-                onClick={() => setCurrentLang(lang.code)}
+                className={`${currentLanguage === lang.code ? "bg-blue-50 text-blue-600" : ""} cursor-pointer`}
+                onClick={() => changeLanguage(lang.code)}
               >
                 <span className="mr-2">{lang.flag}</span>
                 {lang.name}
@@ -111,9 +110,9 @@ const Topbar = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
             <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b">
-              <DropdownMenuLabel className="text-sm font-semibold">Notificações</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-sm font-semibold">{t('topbar.notifications')}</DropdownMenuLabel>
               <Badge variant="outline" className="font-normal">
-                {notifications.length} novas
+                {notifications.length} {t('topbar.newNotifications')}
               </Badge>
             </div>
             <div className="max-h-[340px] overflow-y-auto">
@@ -140,7 +139,7 @@ const Topbar = () => {
             </div>
             <div className="p-2 border-t">
               <Button variant="ghost" size="sm" className="w-full justify-center text-blue-600 hover:bg-blue-50 hover:text-blue-700">
-                Ver todas as notificações
+                {t('topbar.viewAllNotifications')}
               </Button>
             </div>
           </DropdownMenuContent>
@@ -165,14 +164,14 @@ const Topbar = () => {
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
-              <UserCircle className="h-4 w-4 mr-2" /> Meu Perfil
+              <UserCircle className="h-4 w-4 mr-2" /> {t('topbar.myProfile')}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
-              <SettingsIcon className="h-4 w-4 mr-2" /> Preferências
+              <SettingsIcon className="h-4 w-4 mr-2" /> {t('topbar.preferences')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer">
-              <LogOut className="h-4 w-4 mr-2" /> Sair
+              <LogOut className="h-4 w-4 mr-2" /> {t('topbar.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

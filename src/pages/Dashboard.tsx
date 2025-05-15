@@ -12,8 +12,11 @@ import { CustomerSatisfactionChart } from '@/components/dashboard/CustomerSatisf
 import { InstallationsChart } from '@/components/dashboard/InstallationsChart';
 import { RecentProjects } from '@/components/dashboard/RecentProjects';
 import { DashboardFilters } from '@/components/dashboard/DashboardFilters';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div>

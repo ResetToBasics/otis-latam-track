@@ -12,7 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-  User
+  User,
+  ThumbsUp,
+  BarChart2
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -80,6 +82,16 @@ const [activeItem, setActiveItem] = useState(location.pathname);
     name: 'Clientes',
     icon: <Users />,
     path: '/clients'
+  },
+  {
+    name: 'Feedback',
+    icon: <ThumbsUp />,
+    path: '/feedback'
+  },
+  {
+    name: 'Análise por Países',
+    icon: <BarChart2 />,
+    path: '/countries'
   },
   {
     name: 'Configurações',
